@@ -1,7 +1,13 @@
-import React from 'react';
-import { CheckboxProps } from './Checkbox.types';
+import React from "react";
+import { CheckboxProps } from "./Checkbox.types";
 
-export function Checkbox({ label, checked, onChange, disabled, containerClassName = '' }: CheckboxProps) {
+export function Checkbox({
+  label,
+  checked,
+  onChange,
+  disabled,
+  containerClassName = "",
+}: CheckboxProps) {
   return (
     <div className={`form-check mb-3 ${containerClassName}`}>
       <input
