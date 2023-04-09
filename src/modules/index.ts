@@ -1,2 +1,2 @@
-export * from "./Tasks.module";
-export * from "./EditTask.module";
+export * from "./Tasks/Tasks.module";
+export * from "./EditTask/EditTask.module";

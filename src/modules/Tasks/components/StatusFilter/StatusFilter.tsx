@@ -4,11 +4,15 @@ import { StatusFilterProps } from "./StatusFilter.types";
 import { FiltersType } from "domains/index";
 import { FILTER_TYPES } from "constants/index";
 
-export function StatusFilter({ onChange, tasksType }: StatusFilterProps) {
+export function StatusFilter({
+  onChange,
+  tasksType,
+  disabled,
+}: StatusFilterProps) {
   const onFilterChange = (
     evt: MouseEvent<HTMLDivElement> & { target: HTMLButtonElement }
   ) => {
-    onChange(evt.target.textContent as FiltersType);
+    if (!disabled) onChange(evt.target.textContent as FiltersType);
   };
 
   return (

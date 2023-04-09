@@ -2,7 +2,12 @@ import React, { ChangeEventHandler, MouseEvent } from "react";
 import "./SearchInput.css";
 import { SearchInputProps } from "./SearchInput.types";
 
-export function SearchInput({ onChange, value, onReset }: SearchInputProps) {
+export function SearchInput({
+  onChange,
+  value,
+  onReset,
+  disabled,
+}: SearchInputProps) {
   const onSearchInputChange: ChangeEventHandler<HTMLInputElement> = (evt) =>
     onChange(evt.target.value);
 
@@ -16,6 +21,7 @@ export function SearchInput({ onChange, value, onReset }: SearchInputProps) {
       <input
         className="form-control search-input"
         placeholder="search"
+        disabled={disabled}
         onChange={onSearchInputChange}
         value={value}
       />
