@@ -7,7 +7,7 @@ export class AddTaskAgent extends BasicAgent {
   }
 
   async postTask(data: PostTaskRequest) {
-    await this._http.post("/tasks", data);
+    return await this._http.post("/tasks", data);
   }
 }
 

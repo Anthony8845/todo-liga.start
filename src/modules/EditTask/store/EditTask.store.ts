@@ -1,11 +1,18 @@
-import { action, computed, makeObservable, observable, reaction } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  reaction,
+  runInAction,
+} from "mobx";
 import { AddEditTaskEntity, TaskEntity } from "domains/Task.entity";
 import { getExternalTask, mapToInternalPatch } from "helpers/index";
-import { EditTaskAgentInstanse } from "http/agent/EditTask.agent";
+import { EditTaskAgentInstanse } from "http/agent";
 
-type PrivateFields = "_task" | "_isTaskLoading" | "_isImportantDisabled";
+type PrivateFields = "_task" | "_isTaskLoading";
 
-export class EditTask {
+export class EditTaskStore {
   taskId: string | undefined = undefined;
 
   constructor() {
@@ -13,7 +20,6 @@ export class EditTask {
       loadTask: action,
       patchTask: action,
       convertTask: action,
-      toggleImportantDisabled: action,
 
       task: computed,
       isTaskLoading: computed,
@@ -21,7 +27,6 @@ export class EditTask {
       taskId: observable,
       _task: observable,
       _isTaskLoading: observable,
-      _isImportantDisabled: observable,
     });
     reaction(
       () => this.taskId,
@@ -30,27 +35,18 @@ export class EditTask {
       }
     );
   }
-  private _isImportantDisabled: boolean | undefined = undefined;
-
-  get isImportantDisabled() {
-    return this._isImportantDisabled;
-  }
-
-  toggleImportantDisabled = (done: boolean) => {
-    if (done) return (this._isImportantDisabled = true);
-    else this._isImportantDisabled = false;
-  };
 
   private _isTaskLoading = true;
+  private _task: TaskEntity | undefined = undefined;
 
   get isTaskLoading() {
     return this._isTaskLoading;
   }
-  private _task: TaskEntity | undefined = undefined;
 
   get task(): TaskEntity | undefined {
     return this._task;
   }
+
   async getTask(taskId: string) {
     const res = await EditTaskAgentInstanse.getTask(taskId);
     const data = getExternalTask(res);
@@ -58,12 +54,23 @@ export class EditTask {
   }
 
   async loadTask(taskId: string | undefined) {
-    this._isTaskLoading = true;
-    if (taskId) {
-      const data = await this.getTask(taskId);
-      this._task = data;
+    runInAction(() => {
+      this._isTaskLoading = true;
+    });
+    try {
+      if (taskId) {
+        const data = await this.getTask(taskId);
+        runInAction(() => {
+          this._task = data;
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      runInAction(() => {
+        this._isTaskLoading = false;
+      });
     }
-    this._isTaskLoading = false;
   }
   convertTask = async (task: AddEditTaskEntity, taskId: string | undefined) => {
     const internalTask = mapToInternalPatch(task);
@@ -71,12 +78,20 @@ export class EditTask {
     return data;
   };
   patchTask = async (task: AddEditTaskEntity | undefined) => {
-    if (task) {
-      await this.convertTask(task, this.taskId);
-      this._task = undefined;
-      this.taskId = undefined;
+    try {
+      if (task) {
+        const data = await this.convertTask(task, this.taskId);
+
+        runInAction(() => {
+          this._task = undefined;
+          this.taskId = undefined;
+        });
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 }
 
-export const EditTaskInstance = new EditTask();
+export const EditTaskStoreInstance = new EditTaskStore();

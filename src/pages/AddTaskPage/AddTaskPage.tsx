@@ -1,6 +1,6 @@
 import React from "react";
 import { PageContainer } from "components/PageContainer";
-import { AddTask } from "modules/AddTask";
+import { AddTask } from "modules/index";
 
 export const AddTaskPage = () => {
   return (

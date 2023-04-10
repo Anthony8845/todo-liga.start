@@ -1,4 +1,10 @@
-import { action, computed, makeObservable, observable } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+} from "mobx";
 import {
   SearchFormEntity,
   TaskEntity,
@@ -20,8 +26,8 @@ type PrivateFields =
 export class TaskStore {
   constructor() {
     makeObservable<this, PrivateFields>(this, {
-      _isTaskLoading: observable,
-      _tasks: observable,
+      _isTaskLoading: observable.deep,
+      _tasks: observable.deep,
       _tasksStats: observable,
       _searchForm: observable,
 
@@ -38,31 +44,28 @@ export class TaskStore {
   }
 
   private _isTaskLoading = false;
-
-  get isTaskLoading() {
-    return this._isTaskLoading;
-  }
-
   private _tasks: TaskEntity[] | null = [];
-
-  get tasks(): TaskEntity[] | null {
-    return this._tasks;
-  }
-
   private _tasksStats: TasksStatsEntity | null = {
     total: 0,
     important: 0,
     done: 0,
   };
-
-  get tasksStats(): TasksStatsEntity | null {
-    return this._tasksStats;
-  }
-
   private _searchForm?: SearchFormEntity = {
     searchValue: "",
     filterType: "All",
   };
+
+  get isTaskLoading() {
+    return this._isTaskLoading;
+  }
+
+  get tasks(): TaskEntity[] | null {
+    return this._tasks;
+  }
+
+  get tasksStats(): TasksStatsEntity | null {
+    return this._tasksStats;
+  }
 
   getTask = async (searchParams?: SearchFormEntity) => {
     const externalSearchParams = mapToExternalParams(searchParams);
@@ -75,21 +78,28 @@ export class TaskStore {
   };
 
   loadTask = async (searchParams?: SearchFormEntity) => {
-    this._isTaskLoading = true;
+    runInAction(() => {
+      this._isTaskLoading = true;
+    });
 
     // request server
     try {
       if (searchParams) this._searchForm = searchParams;
 
       const { task, taskStats } = await this.getTask(this._searchForm);
-
-      this._tasks = task;
-      this._tasksStats = taskStats;
+      runInAction(() => {
+        this._tasks = task;
+        this._tasksStats = taskStats;
+      });
     } catch {
-      this._tasks = null;
-      this._tasksStats = null;
+      runInAction(() => {
+        this._tasks = null;
+        this._tasksStats = null;
+      });
     } finally {
-      this._isTaskLoading = false;
+      runInAction(() => {
+        this._isTaskLoading = false;
+      });
     }
   };
 
@@ -104,13 +114,16 @@ export class TaskStore {
         isImportant: !currentStatus,
       });
       const { task, taskStats } = await this.getTask(this._searchForm);
-
-      this._tasks = task;
-      this._tasksStats = taskStats;
+      runInAction(() => {
+        this._tasks = task;
+        this._tasksStats = taskStats;
+      });
     } catch (error) {
       console.log(error);
     } finally {
-      this._isTaskLoading = false;
+      runInAction(() => {
+        this._isTaskLoading = false;
+      });
     }
   };
 
@@ -127,30 +140,42 @@ export class TaskStore {
       });
 
       const { task, taskStats } = await this.getTask(this._searchForm);
-
-      this._tasks = task;
-      this._tasksStats = taskStats;
+      runInAction(() => {
+        this._tasks = task;
+        this._tasksStats = taskStats;
+      });
     } catch {
-      this._tasks = null;
-      this._tasksStats = null;
+      runInAction(() => {
+        this._tasks = null;
+        this._tasksStats = null;
+      });
     } finally {
-      this._isTaskLoading = false;
+      runInAction(() => {
+        this._isTaskLoading = false;
+      });
     }
   };
   deleteTask = async (taskId: TaskEntity["id"]) => {
-    this._isTaskLoading = true;
+    runInAction(() => {
+      this._isTaskLoading = true;
+    });
     //request server
     try {
       await TaskAgentInstance.deleteTask(taskId);
       const { task, taskStats } = await this.getTask(this._searchForm);
-
-      this._tasks = task;
-      this._tasksStats = taskStats;
+      runInAction(() => {
+        this._tasks = task;
+        this._tasksStats = taskStats;
+      });
     } catch {
-      this._tasks = null;
-      this._tasksStats = null;
+      runInAction(() => {
+        this._tasks = null;
+        this._tasksStats = null;
+      });
     } finally {
-      this._isTaskLoading = false;
+      runInAction(() => {
+        this._isTaskLoading = false;
+      });
     }
   };
 }

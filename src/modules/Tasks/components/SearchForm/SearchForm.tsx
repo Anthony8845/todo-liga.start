@@ -24,8 +24,7 @@ export const SearchFormProto = () => {
   const onSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    handleSubmit((form) => {
-      console.log(form);
+    await handleSubmit((form) => {
       loadTask(form);
     })();
   };

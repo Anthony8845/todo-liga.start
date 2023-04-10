@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { observer } from "mobx-react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { EditTaskInstance } from "./store";
+import { EditTaskStoreInstance } from "./store";
 import { DEFAULT_EDITTASK_FORM, validationSchema } from "./EditTask.constans";
 import { AddEditTaskEntity } from "domains/index";
 import { Checkbox, Loader, TextField } from "components/index";
@@ -11,33 +11,29 @@ import { PATH_LIST } from "constants/paths";
 
 export const EditTaskProto = () => {
   const { taskId } = useParams();
-  const { control, reset, handleSubmit, setValue } = useForm<AddEditTaskEntity>(
-    {
+  const { control, reset, handleSubmit, setValue, watch } =
+    useForm<AddEditTaskEntity>({
       defaultValues: DEFAULT_EDITTASK_FORM,
       resolver: yupResolver(validationSchema),
-    }
-  );
+    });
+
+  const isDone = watch("isDone");
   const navigate = useNavigate();
-  const {
-    patchTask,
-    task,
-    isTaskLoading,
-    isImportantDisabled,
-    toggleImportantDisabled,
-  } = EditTaskInstance;
+  const { patchTask, task, isTaskLoading } = EditTaskStoreInstance;
 
   useEffect(() => {
-    EditTaskInstance.taskId = taskId;
-  }, [EditTaskInstance, taskId]);
+    if (isDone) setValue("isImportant", false);
+  }, [isDone]);
+
+  useEffect(() => {
+    EditTaskStoreInstance.taskId = taskId;
+  }, [EditTaskStoreInstance, taskId]);
+
   useEffect(() => {
     if (task) {
       reset(task);
     }
   }, [task]);
-
-  useEffect(() => {
-    if (task?.isDone) toggleImportantDisabled(task?.isDone);
-  }, []);
 
   const onInputTaskName = (taskName: string): void => {
     setValue("name", taskName);
@@ -50,11 +46,11 @@ export const EditTaskProto = () => {
   };
   const onInputTaskCompleted = (isDone: boolean): void => {
     setValue("isDone", isDone);
-    toggleImportantDisabled(isDone);
   };
+
   const onSubmit = async (task: AddEditTaskEntity) => {
-    await patchTask(task);
-    return navigate(PATH_LIST.ROOT);
+    const data = await patchTask(task);
+    if (data) navigate(PATH_LIST.ROOT);
   };
 
   return (
@@ -93,7 +89,7 @@ export const EditTaskProto = () => {
               <Checkbox
                 label="Important"
                 checked={field.value}
-                disabled={isImportantDisabled}
+                disabled={isDone ? true : false}
                 onChange={onInputTaskImportant}
               />
             )}

@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { AddTaskInstance } from "./store";
+import { AddTaskStoreInstance } from "./store";
 import { DEFAULT_ADDTASK_FORM, validationSchema } from "./AddTask.constants";
 import { TextField } from "components/TextField";
 import { Checkbox } from "components/Checkbox";
@@ -13,7 +13,7 @@ import { Loader } from "components/Loader";
 import { PATH_LIST } from "constants/paths";
 
 export const AddTaskProto = () => {
-  const { addTask, isTaskLoading } = AddTaskInstance;
+  const { addTask, isTaskLoading } = AddTaskStoreInstance;
   const navigate = useNavigate();
   const { control, handleSubmit, setValue, reset } = useForm<AddEditTaskEntity>(
     {
@@ -31,10 +31,11 @@ export const AddTaskProto = () => {
   const onInputImportant = (importantCheck: boolean): void => {
     setValue("isImportant", importantCheck);
   };
+
   const onSubmit = async (data: AddEditTaskEntity): Promise<void> => {
-    await addTask(data);
+    const res = await addTask(data);
     reset();
-    return navigate(PATH_LIST.ROOT);
+    if (res) navigate(PATH_LIST.ROOT);
   };
 
   return (

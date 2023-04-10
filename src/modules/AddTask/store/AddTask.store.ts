@@ -6,12 +6,12 @@ import {
   runInAction,
 } from "mobx";
 import { AddEditTaskEntity } from "domains/Task.entity";
-import { AddTaskAgentInstance } from "http/agent/AddTask.agent";
+import { AddTaskAgentInstance } from "http/agent";
 import { mapToInternalPost } from "helpers/mappers";
 
 type PrivateFields = "_isTaskLoading";
 
-class AddTask {
+class AddTaskStore {
   constructor() {
     makeObservable<this, PrivateFields>(this, {
       _isTaskLoading: observable,
@@ -29,14 +29,15 @@ class AddTask {
 
   async getTask(task: AddEditTaskEntity) {
     const internalAddTask = mapToInternalPost(task);
-    const res = await AddTaskAgentInstance.postTask(internalAddTask);
-    return res;
+    return await AddTaskAgentInstance.postTask(internalAddTask);
   }
 
   addTask = async (data: AddEditTaskEntity) => {
-    this._isTaskLoading = true;
+    runInAction(() => {
+      this._isTaskLoading = true;
+    });
     try {
-      await this.getTask(data);
+      return await this.getTask(data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -47,4 +48,4 @@ class AddTask {
   };
 }
 
-export const AddTaskInstance = new AddTask();
+export const AddTaskStoreInstance = new AddTaskStore();
