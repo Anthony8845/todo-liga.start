@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react";
+import React, { useCallback } from "react";
 import { Link } from "react-router-dom";
 import { TaskProps } from "./Task.types";
 import "./Task.css";
@@ -14,7 +14,7 @@ export const Task = ({
 
   const onBtnImportantClick = () => changeTaskImportance(id, isImportant);
   const onBtnCompleteClick = () => changeTaskComplete(id, isDone);
-  const onBtnDeleteClick = useCallback(() => deleteTask(id), []);
+  const onBtnDeleteClick = () => deleteTask(id);
 
   return (
     <div>
