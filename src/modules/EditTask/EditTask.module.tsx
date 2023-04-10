@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { observer } from "mobx-react";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,6 +7,7 @@ import { EditTaskInstance } from "./store";
 import { DEFAULT_EDITTASK_FORM, validationSchema } from "./EditTask.constans";
 import { AddEditTaskEntity } from "domains/index";
 import { Checkbox, Loader, TextField } from "components/index";
+import { PATH_LIST } from "constants/paths";
 
 export const EditTaskProto = () => {
   const { taskId } = useParams();
@@ -16,12 +17,13 @@ export const EditTaskProto = () => {
       resolver: yupResolver(validationSchema),
     }
   );
+  const navigate = useNavigate();
   const {
-    postTask,
+    patchTask,
     task,
     isTaskLoading,
     isImportantDisabled,
-    toggleIsImportantTask,
+    toggleImportantDisabled,
   } = EditTaskInstance;
 
   useEffect(() => {
@@ -29,12 +31,13 @@ export const EditTaskProto = () => {
   }, [EditTaskInstance, taskId]);
   useEffect(() => {
     if (task) {
-      setValue("name", task.name);
-      setValue("info", task.info);
-      setValue("isImportant", task.isImportant);
-      setValue("isDone", task.isDone);
+      reset(task);
     }
   }, [task]);
+
+  useEffect(() => {
+    if (task?.isDone) toggleImportantDisabled(task?.isDone);
+  }, []);
 
   const onInputTaskName = (taskName: string): void => {
     setValue("name", taskName);
@@ -42,15 +45,17 @@ export const EditTaskProto = () => {
   const onInputTaskDescription = (info: string): void => {
     setValue("info", info);
   };
-  function onInputTaskImportant(isImportant: boolean): void {
+  const onInputTaskImportant = (isImportant: boolean): void => {
     setValue("isImportant", isImportant);
-  }
-  function onInputTaskCompleted(isDone: boolean): void {
+  };
+  const onInputTaskCompleted = (isDone: boolean): void => {
     setValue("isDone", isDone);
-  }
-  function onSubmit(e: AddEditTaskEntity): void {
-    postTask(e);
-  }
+    toggleImportantDisabled(isDone);
+  };
+  const onSubmit = async (task: AddEditTaskEntity) => {
+    await patchTask(task);
+    return navigate(PATH_LIST.ROOT);
+  };
 
   return (
     <>

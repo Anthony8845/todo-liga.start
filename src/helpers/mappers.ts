@@ -8,7 +8,9 @@ import {
 import {
   GetAllTasksQuery,
   GetAllTasksResponse,
+  GetTaskResponse,
   PostTaskRequest,
+  UpdateTaskRequest,
 } from "http/model";
 
 export const mapToExternalParams = (
@@ -71,7 +73,24 @@ export const getInternalInfo = (
     ...anotherStats,
   };
 };
+export const getExternalTask = (task: GetTaskResponse): TaskEntity => {
+  const internalTask: TaskEntity = {
+    name: "",
+    id: "",
+    info: "",
+    isImportant: false,
+    isDone: false,
+  };
+  if (task.id) {
+    internalTask.name = task.name || "Неизвестно";
+    internalTask.id = String(task.id);
+    internalTask.info = task.info || "Неизвестно";
+    internalTask.isImportant = task.isImportant || false;
+    internalTask.isDone = task.isCompleted || false;
+  }
 
+  return internalTask;
+};
 export const mapToInternalPost = (task: AddEditTaskEntity) => {
   const newTask: PostTaskRequest = {
     isImportant: false,
@@ -83,6 +102,24 @@ export const mapToInternalPost = (task: AddEditTaskEntity) => {
     newTask.name = task.name;
     newTask.info = task.info;
     newTask.isImportant = task.isImportant;
+  }
+
+  return newTask;
+};
+
+export const mapToInternalPatch = (task: AddEditTaskEntity) => {
+  const newTask: UpdateTaskRequest = {
+    isImportant: false,
+    name: "",
+    info: "",
+    isCompleted: false,
+  };
+
+  if (task) {
+    newTask.isImportant = task.isImportant;
+    newTask.name = task.name;
+    newTask.info = task.info;
+    newTask.isCompleted = task.isDone;
   }
 
   return newTask;

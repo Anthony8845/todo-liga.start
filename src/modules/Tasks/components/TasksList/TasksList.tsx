@@ -13,7 +13,7 @@ export function TasksListProto() {
     changeTaskComplete,
   } = TaskStoreInstance;
   return (
-    <div className="tasks-wrapper d-flex align-items-center justify-content-center">
+    <div className="tasks-wrapper">
       <Loader isLoading={isTaskLoading}>
         {tasks?.length ? (
           <ul className="list-group todo-list mb-3">

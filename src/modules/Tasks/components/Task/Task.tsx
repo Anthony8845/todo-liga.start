@@ -1,20 +1,20 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { TaskProps } from "./Task.types";
 import "./Task.css";
 import { EDIT, ROOT } from "constants/index";
 
-export function Task({
+export const Task = ({
   task,
   changeTaskImportance,
   deleteTask,
   changeTaskComplete,
-}: TaskProps) {
+}: TaskProps) => {
   const { name, info, isImportant, isDone, id } = task;
 
   const onBtnImportantClick = () => changeTaskImportance(id, isImportant);
   const onBtnCompleteClick = () => changeTaskComplete(id, isDone);
-  const onBtnDeleteClick = () => deleteTask(id);
+  const onBtnDeleteClick = useCallback(() => deleteTask(id), []);
 
   return (
     <div>
@@ -57,7 +57,6 @@ export function Task({
             <i className="fa fa-trash-o" />
           </button>
 
-          {/* TODO: Исправить ссылку, когда будет страница редактирования */}
           <Link
             className="task__btn btn btn-outline-secondary btn-sm float-right"
             to={`${ROOT}${EDIT}/${id}`}
@@ -75,4 +74,4 @@ export function Task({
       </p>
     </div>
   );
-}
+};

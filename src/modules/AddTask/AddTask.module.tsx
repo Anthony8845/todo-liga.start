@@ -28,14 +28,14 @@ export const AddTaskProto = () => {
   const onInputDescription = (taskInfo: string): void => {
     setValue("info", taskInfo);
   };
-  function onInputImportant(importantCheck: boolean): void {
+  const onInputImportant = (importantCheck: boolean): void => {
     setValue("isImportant", importantCheck);
-  }
-  function onSubmit(data: AddEditTaskEntity): void {
-    addTask(data);
+  };
+  const onSubmit = async (data: AddEditTaskEntity): Promise<void> => {
+    await addTask(data);
     reset();
     return navigate(PATH_LIST.ROOT);
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
