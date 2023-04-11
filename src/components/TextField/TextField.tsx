@@ -22,7 +22,6 @@ export function TextFieldComponent({
         label={label}
         id={label}
         type={inputType}
-        className="form-control"
         placeholder={placeholder}
         value={value}
         onChange={onFieldChange}
