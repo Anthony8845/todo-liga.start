@@ -1,8 +1,9 @@
 import React, { ChangeEventHandler } from "react";
+import { Alert, Box, TextField } from "@mui/material";
 import { TextFieldProps } from "./TextField.types";
 import "./TextField.css";
 
-export function TextField({
+export function TextFieldComponent({
   label,
   placeholder,
   containerClassName = "",
@@ -15,19 +16,20 @@ export function TextField({
     onChange(evt.target.value);
   };
   return (
-    <div className={`mb-3 ${containerClassName}`}>
-      <label htmlFor={label} className="form-label">
-        {label}
-      </label>
-      <input
+    <>
+      <TextField
+        fullWidth
+        label={label}
+        id={label}
         type={inputType}
         className="form-control"
-        id={label}
         placeholder={placeholder}
         value={value}
         onChange={onFieldChange}
       />
-      {errorText && <div className="invalid">{errorText}</div>}
-    </div>
+      <Box height={55} component="div">
+        {errorText && <Alert severity="error">{errorText}</Alert>}
+      </Box>
+    </>
   );
 }

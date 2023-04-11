@@ -4,10 +4,11 @@ import { Controller, useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 import { AddTaskStoreInstance } from "./store";
 import { DEFAULT_ADDTASK_FORM, validationSchema } from "./AddTask.constants";
-import { TextField } from "components/TextField";
-import { Checkbox } from "components/Checkbox";
+import { TextFieldComponent } from "components/TextField";
+import { CheckboxComponent } from "components/Checkbox";
 import { AddEditTaskEntity } from "domains/Task.entity";
 import { Loader } from "components/Loader";
 import { PATH_LIST } from "constants/paths";
@@ -45,7 +46,7 @@ export const AddTaskProto = () => {
           name="name"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <TextField
+            <TextFieldComponent
               label="Task name"
               inputType="text"
               value={field.value}
@@ -59,7 +60,7 @@ export const AddTaskProto = () => {
           name="info"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <TextField
+            <TextFieldComponent
               placeholder="Clean my room"
               label="What to do (description)"
               value={field.value}
@@ -72,19 +73,16 @@ export const AddTaskProto = () => {
           name="isImportant"
           control={control}
           render={({ field }) => (
-            <Checkbox
+            <CheckboxComponent
               label="Important"
               checked={field.value}
               onChange={onInputImportant}
             />
           )}
         />
-        <button
-          className="btn btn-secondary d-block ml-auto w-100"
-          type="submit"
-        >
+        <Button variant="outlined" color="primary" type="submit">
           Add task
-        </button>
+        </Button>
       </Loader>
     </form>
   );

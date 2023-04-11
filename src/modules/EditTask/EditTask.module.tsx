@@ -6,7 +6,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { EditTaskStoreInstance } from "./store";
 import { DEFAULT_EDITTASK_FORM, validationSchema } from "./EditTask.constans";
 import { AddEditTaskEntity } from "domains/index";
-import { Checkbox, Loader, TextField } from "components/index";
+import {
+  CheckboxComponent,
+  Loader,
+  TextFieldComponent,
+} from "components/index";
 import { PATH_LIST } from "constants/paths";
 
 export const EditTaskProto = () => {
@@ -64,7 +68,7 @@ export const EditTaskProto = () => {
             name="name"
             control={control}
             render={({ field }) => (
-              <TextField
+              <TextFieldComponent
                 label="Task name"
                 value={field.value}
                 onChange={onInputTaskName}
@@ -75,7 +79,7 @@ export const EditTaskProto = () => {
             name="info"
             control={control}
             render={({ field }) => (
-              <TextField
+              <TextFieldComponent
                 label="What to do (description)"
                 value={field.value}
                 onChange={onInputTaskDescription}
@@ -86,7 +90,7 @@ export const EditTaskProto = () => {
             name="isImportant"
             control={control}
             render={({ field }) => (
-              <Checkbox
+              <CheckboxComponent
                 label="Important"
                 checked={field.value}
                 disabled={isDone ? true : false}
@@ -98,7 +102,7 @@ export const EditTaskProto = () => {
             name="isDone"
             control={control}
             render={({ field }) => (
-              <Checkbox
+              <CheckboxComponent
                 label="Completed"
                 checked={field.value}
                 onChange={onInputTaskCompleted}

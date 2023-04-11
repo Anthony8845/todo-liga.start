@@ -1,7 +1,13 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from "@mui/icons-material/Edit";
+import { IconButton, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 import { TaskProps } from "./Task.types";
-import "./Task.css";
+import { TaskStyled } from "./Task.styled";
 import { EDIT, ROOT } from "constants/index";
 
 export const Task = ({
@@ -18,60 +24,60 @@ export const Task = ({
 
   return (
     <div>
-      <div className="task mb-2">
-        <p
-          className={`task__label ${
-            isDone ? "text-decoration-line-through text-secondary" : ""
-          } ${isImportant ? "text-success fw-bold" : ""}`}
+      <TaskStyled>
+        <Typography
+          variant="h6"
+          component="p"
+          color={isImportant ? "green" : "default"}
+          sx={
+            isDone
+              ? { textDecoration: "line-through" }
+              : { textDecoration: "none" }
+          }
         >
           {name}
-        </p>
+        </Typography>
 
-        <div className="task__btns">
-          <button
+        <div>
+          <IconButton
             type="button"
-            className={`task__btn btn ${
-              isImportant ? "btn-success" : "btn-outline-success"
-            } btn-sm float-right btn-important`}
+            color={isImportant ? "success" : "default"}
             disabled={isDone}
             onClick={onBtnImportantClick}
           >
-            <i className="fa fa-exclamation" />
-          </button>
+            <PriorityHighIcon fontSize="small" />
+          </IconButton>
 
-          <button
+          <IconButton
             type="button"
-            className={`task__btn btn ${
-              isDone ? "btn-danger" : "btn-outline-danger"
-            } btn-sm float-right`}
+            color={isDone ? "error" : "default"}
             onClick={onBtnCompleteClick}
           >
-            <i className="fa fa-check" />
-          </button>
+            <CheckBoxIcon />
+          </IconButton>
 
-          <button
-            type="button"
-            className="task__btn btn btn-outline-danger btn-sm float-right btn-delete"
-            onClick={onBtnDeleteClick}
-          >
-            <i className="fa fa-trash-o" />
-          </button>
+          <IconButton type="button" onClick={onBtnDeleteClick}>
+            <DeleteOutlineIcon />
+          </IconButton>
 
-          <Link
-            className="task__btn btn btn-outline-secondary btn-sm float-right"
-            to={`${ROOT}${EDIT}/${id}`}
-          >
-            <i className="fa fa-pencil" />
+          <Link to={`${ROOT}${EDIT}/${id}`}>
+            <IconButton color="primary">
+              <EditIcon />
+            </IconButton>
           </Link>
         </div>
-      </div>
-      <p
-        className={`${
-          isDone ? "text-decoration-line-through text-secondary" : ""
-        } ${isImportant ? "text-success fw-bold" : ""}`}
+      </TaskStyled>
+      <Typography
+        component="p"
+        color={isImportant ? "green" : "default"}
+        sx={
+          isDone
+            ? { textDecoration: "line-through" }
+            : { textDecoration: "none" }
+        }
       >
         {info}
-      </p>
+      </Typography>
     </div>
   );
 };

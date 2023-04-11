@@ -1,10 +1,7 @@
 import React from "react";
-import "./PageContainer.css";
+import { PageContainerStyled } from "./PageContainer.styled";
 import { PageContainerProps } from "./PageContainer.types";
 
-export function PageContainer({
-  children,
-  className = "",
-}: PageContainerProps) {
-  return <div className={`container ${className}`}>{children}</div>;
+export function PageContainer({ children }: PageContainerProps) {
+  return <PageContainerStyled>{children}</PageContainerStyled>;
 }

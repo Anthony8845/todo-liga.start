@@ -1,5 +1,7 @@
 import React, { ChangeEventHandler, MouseEvent } from "react";
-import "./SearchInput.css";
+import CloseIcon from "@mui/icons-material/Close";
+import { Box, Button, FormControl, Icon, Input, SvgIcon } from "@mui/material";
+import { SearchInputStyled } from "./SearchInputStyled";
 import { SearchInputProps } from "./SearchInput.types";
 
 export function SearchInput({
@@ -17,17 +19,18 @@ export function SearchInput({
   };
 
   return (
-    <div className="search-panel">
-      <input
-        className="form-control search-input"
+    <SearchInputStyled>
+      <Input
         placeholder="search"
         disabled={disabled}
         onChange={onSearchInputChange}
         value={value}
       />
-      <button className="close" onClick={onResetBtnClick}>
-        <i className="fa fa-close"></i>
-      </button>
-    </div>
+      <Button onClick={onResetBtnClick}>
+        <SvgIcon>
+          <CloseIcon />
+        </SvgIcon>
+      </Button>
+    </SearchInputStyled>
   );
 }
