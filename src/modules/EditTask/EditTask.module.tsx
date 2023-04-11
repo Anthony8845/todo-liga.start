@@ -3,8 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { observer } from "mobx-react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Button, Typography } from "@mui/material";
 import { EditTaskStoreInstance } from "./store";
 import { DEFAULT_EDITTASK_FORM, validationSchema } from "./EditTask.constans";
+import { EditTaskStyled } from "./EditTask.styled";
 import { AddEditTaskEntity } from "domains/index";
 import {
   CheckboxComponent,
@@ -59,10 +61,10 @@ export const EditTaskProto = () => {
 
   return (
     <>
-      <h1 className="d-flex justify-content-center">
+      <Typography mb={3} align="center" variant="h4" component={"h1"}>
         TODO LIST | EDIT TASK {taskId}
-      </h1>
-      <form className="d-flex flex-column" onSubmit={handleSubmit(onSubmit)}>
+      </Typography>
+      <EditTaskStyled onSubmit={handleSubmit(onSubmit)}>
         <Loader isLoading={isTaskLoading}>
           <Controller
             name="name"
@@ -110,10 +112,10 @@ export const EditTaskProto = () => {
             )}
           />
         </Loader>
-        <button className="btn btn-secondary d-block ml-auto w-100">
+        <Button variant="contained" fullWidth color="primary" type="submit">
           Edit task
-        </button>
-      </form>
+        </Button>
+      </EditTaskStyled>
     </>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Task } from "../Task";
+import { NotFound, TaskListStyled } from "./TasksList.styled";
 import { Loader } from "components/index";
 import { TaskStoreInstance } from "modules/Tasks/store";
 
@@ -13,10 +14,10 @@ export function TasksListProto() {
     changeTaskComplete,
   } = TaskStoreInstance;
   return (
-    <div className="tasks-wrapper">
+    <TaskListStyled>
       <Loader isLoading={isTaskLoading}>
         {tasks?.length ? (
-          <ul className="list-group todo-list mb-3">
+          <ul>
             {tasks.map((task) => (
               <li key={task.id} className="list-group-item">
                 <Task
@@ -30,10 +31,10 @@ export function TasksListProto() {
             ))}
           </ul>
         ) : (
-          <div>not found</div>
+          <NotFound>not found</NotFound>
         )}
       </Loader>
-    </div>
+    </TaskListStyled>
   );
 }
 

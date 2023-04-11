@@ -80,7 +80,7 @@ export const AddTaskProto = () => {
             />
           )}
         />
-        <Button variant="outlined" color="primary" type="submit">
+        <Button variant="contained" fullWidth color="primary" type="submit">
           Add task
         </Button>
       </Loader>
