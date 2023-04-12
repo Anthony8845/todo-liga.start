@@ -19,7 +19,7 @@ export class EditTaskStore {
     makeObservable<this, PrivateFields>(this, {
       loadTask: action,
       patchTask: action,
-      convertTask: action,
+      // convertTask: action,
 
       task: computed,
       isTaskLoading: computed,
@@ -72,15 +72,15 @@ export class EditTaskStore {
       });
     }
   }
-  convertTask = async (task: AddEditTaskEntity, taskId: string | undefined) => {
-    const internalTask = mapToInternalPatch(task);
-    const data = await EditTaskAgentInstanse.patchTask(internalTask, taskId);
-    return data;
-  };
+
   patchTask = async (task: AddEditTaskEntity | undefined) => {
     try {
       if (task) {
-        const data = await this.convertTask(task, this.taskId);
+        const internalTask = mapToInternalPatch(task);
+        const data = await EditTaskAgentInstanse.patchTask(
+          internalTask,
+          this.taskId
+        );
 
         runInAction(() => {
           this._task = undefined;

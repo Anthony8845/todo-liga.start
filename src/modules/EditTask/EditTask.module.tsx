@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { observer } from "mobx-react";
@@ -69,22 +69,24 @@ export const EditTaskProto = () => {
           <Controller
             name="name"
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState: { error } }) => (
               <TextFieldComponent
                 label="Task name"
                 value={field.value}
                 onChange={onInputTaskName}
+                errorText={error?.message}
               />
             )}
           />
           <Controller
             name="info"
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState: { error } }) => (
               <TextFieldComponent
                 label="What to do (description)"
                 value={field.value}
                 onChange={onInputTaskDescription}
+                errorText={error?.message}
               />
             )}
           />

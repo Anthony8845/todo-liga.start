@@ -5,9 +5,8 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton, Typography } from "@mui/material";
-import { Box } from "@mui/system";
 import { TaskProps } from "./Task.types";
-import { TaskStyled } from "./Task.styled";
+import { TaskStyled, TaskText } from "./Task.styled";
 import { EDIT, ROOT } from "constants/index";
 
 export const Task = ({
@@ -25,18 +24,18 @@ export const Task = ({
   return (
     <div>
       <TaskStyled>
-        <Typography
+        <TaskText
           variant="h6"
-          component="p"
           color={isImportant ? "green" : "default"}
-          sx={
-            isDone
-              ? { textDecoration: "line-through" }
-              : { textDecoration: "none" }
-          }
+          textDecoration={isDone ? "line-through" : "none"}
+          // sx={
+          //   isDone
+          //     ? { textDecoration: "line-through" }
+          //     : { textDecoration: "none" }
+          // }
         >
           {name}
-        </Typography>
+        </TaskText>
 
         <div>
           <IconButton
